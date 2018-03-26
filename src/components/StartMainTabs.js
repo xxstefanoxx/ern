@@ -39,8 +39,15 @@ const startTabs = () => {
                 tabBarButtonColor: '#BEBBBB', // optional, change the color of the tab icons and text (also unselected). On Android, add this to appStyle
                 tabBarSelectedButtonColor: '#4A4A4A', // optional, change the color of the selected tab icon and text (only selected). On Android, add this to appStyle
                 tabBarBackgroundColor: '#FBFBFB', // optional, change the background color of the tab bar
-                initialTabIndex: 2, // optional, the default selected bottom tab. Default: 0. On Android, add this to appStyle
+                initialTabIndex: 2 // optional, the default selected bottom tab. Default: 0. On Android, add this to appStyle
             },
+            appStyle: {
+                tabBarButtonColor: '#BEBBBB', // optional, change the color of the tab icons and text (also unselected). On Android, add this to appStyle
+                tabBarSelectedButtonColor: '#4A4A4A', // optional, change the color of the selected tab icon and text (only selected). On Android, add this to appStyle
+                tabBarBackgroundColor: '#FBFBFB',
+                navBarBackgroundColor: '#56B9C9',
+                navBarTitleTextCentered: true
+            }
         });
     });
 };

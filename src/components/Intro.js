@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     text: {
       fontSize: 25,
       fontWeight: 'bold',
-      marginTop: Platform.OS === 'ios' ? 60 : 0,
+      marginTop: Platform.OS === 'ios' ? 60 : 30,
       color: '#000',
       textAlign: 'center'
     },
