@@ -72,12 +72,12 @@ export default class Maps extends Component {
     const markerData = this.state.markers[markerIndex];
     const markers = [ ...this.state.markers ];;
 
-    markers[this.state.selected] = {...markers[this.state.selected], icon: "../assets/GEO_Division_OFF.png"};
+    markers[this.state.selected] = {...markers[this.state.selected], icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"};
     this.setState({ markers });
 
     this.setState({ selected: markerIndex })
     
-    markers[markerIndex] = {...markers[markerIndex], icon: "../assets/GEO_Division_active.png"};
+    markers[markerIndex] = {...markers[markerIndex], icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_active.png"};
     this.setState({ markers });
 
     if (!markerData || !mapRef) {
@@ -106,7 +106,7 @@ export default class Maps extends Component {
         title: "Best Place",
         description: "This is the best place in Portland",
         image: "https://i.imgur.com/sNam9iJ.jpg",
-        icon: "./assets/GEO_Division_OFF.png"
+        icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"
       },
       {
         coordinate: {
@@ -116,7 +116,7 @@ export default class Maps extends Component {
         title: "Second Best Place",
         description: "This is the second best place in Portland",
         image: "https://i.imgur.com/N7rlQYt.jpg",
-        icon: "src/assets/GEO_Division_OFF.png"
+        icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"
       },
       {
         coordinate: {
@@ -126,7 +126,7 @@ export default class Maps extends Component {
         title: "Third Best Place",
         description: "This is the third best place in Portland",
         image: "https://i.imgur.com/UDrH0wm.jpg",
-        icon: "./src/assets/GEO_Division_OFF.png"
+        icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"
       },
       {
         coordinate: {
@@ -136,7 +136,7 @@ export default class Maps extends Component {
         title: "Fourth Best Place",
         description: "This is the fourth best place in Portland",
         image: "https://i.imgur.com/Ka8kNST.jpg",
-        icon: "../assets/GEO_Division_OFF.png"
+        icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"
       },
     ],
     region: {
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000000',
     position: 'absolute',
     bottom: -10,
-    width: 100,
+    width: Dimensions.get('window').width,
     height: 100
   },
   mapContainer: {
