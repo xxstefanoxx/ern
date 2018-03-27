@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Platform, View, Text, Image, Dimensions } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import StartMainTabs from './StartMainTabs';
 import { Navigation } from 'react-native-navigation';

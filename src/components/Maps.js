@@ -1,6 +1,8 @@
 import MapView, { Marker } from 'react-native-maps';
 import React, { Component } from 'react';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   StyleSheet,
   Text,
@@ -9,7 +11,9 @@ import {
   Image,
   Dimensions,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight,
+  TouchableNativeFeedback
 } from "react-native";
 
 
@@ -21,7 +25,6 @@ function wp (percentage) {
     return Math.round(value);
 }
 
-const slideHeight = viewportHeight * 0.2;
 const slideWidth = wp(75);
 const itemHorizontalMargin = wp(2);
 
@@ -38,62 +41,6 @@ export default class Maps extends Component {
       navBarNoBorder: true
     });
   }
-  
-  _renderItem ({item, index}) {
-    return (
-        <View style={styles.mainContainer}>
-          <TouchableOpacity
-              activeOpacity={1}
-              style={styles.slideInnerContainer}
-              onPress={() => { alert(`You've clicked '${item.title}'`); }}
-              >
-                <View style={[styles.textContainer]}>
-                    <Text>{ item.title }</Text>
-                    <Text style={[styles.subtitle]} numberOfLines={2}>
-                        { item.description }
-                    </Text>
-                </View>             
-            </TouchableOpacity>
-        </View>
-    );
-  }
-
-  markerClick(index) {
-    const mapRef = this.map;
-    const markerRef = this._marker;
-    const carouselRef = this._carousel;
-    carouselRef.snapToItem (index, animated = true)
-  }
-
-  _centerMapOnMarker (markerIndex, marker) {
-
-    const mapRef = this.map;
-    const markerRef = this._marker;
-    const markerData = this.state.markers[markerIndex];
-    const markers = [ ...this.state.markers ];;
-
-    markers[this.state.selected] = {...markers[this.state.selected], icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"};
-    this.setState({ markers });
-
-    this.setState({ selected: markerIndex })
-    
-    markers[markerIndex] = {...markers[markerIndex], icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_active.png"};
-    this.setState({ markers });
-
-    if (!markerData || !mapRef) {
-        return;
-    }
-    mapRef.animateToRegion({
-        latitude: markerData.coordinate.latitude,
-        longitude: markerData.coordinate.longitude,
-        latitudeDelta: 0.0315,
-        longitudeDelta: 0.0258
-    });
-
-}
-
-
-
 
   state = {
     selected: 0,
@@ -146,15 +93,77 @@ export default class Maps extends Component {
       longitudeDelta: 0.040142817690068,
     },
   };
+  
+  _renderItem ({item, index}) {
+    return (
+        <View style={styles.mainContainer}>
+          <TouchableOpacity
+              activeOpacity={1}
+              style={styles.slideInnerContainer}
+              onPress={() => { alert(`You've clicked '${item.title}'`); }}
+              >
+                <LinearGradient colors={['#3B79B0', '#466BB9', '#5558C5']} style={[styles.textContainer]}>
+                    <Text style={[styles.title]}>{ item.title }</Text>
+                    <Text style={[styles.description]} numberOfLines={2}>
+                        { item.description }
+                    </Text>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={this._onPressButton}>
+                            <Icon name="phone" size={20} color="#fff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button]} onPress={this._onPressButton}>
+                            <Icon name="street-view" size={20} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+                </LinearGradient>             
+            </TouchableOpacity>
+        </View>
+    );
+  }
+
+  markerClick(index) {
+    const mapRef = this.map;
+    const markerRef = this._marker;
+    const carouselRef = this._carousel;
+    carouselRef.snapToItem (index, animated = true)
+  }
+
+  _centerMapOnMarker (markerIndex, marker) {
+
+    const mapRef = this.map;
+    const markerRef = this._marker;
+    const markerData = this.state.markers[markerIndex];
+    const markers = this.state.markers;
+
+    markers[this.state.selected].icon = 'https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png'
+
+    this.setState({ selected: markerIndex })
+    
+    markers[markerIndex].icon = 'https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_active.png';
+    this.setState({ markers });
+
+    if (!markerData || !mapRef) {
+        return;
+    }
+    mapRef.animateToRegion({
+        latitude: markerData.coordinate.latitude,
+        longitude: markerData.coordinate.longitude,
+        latitudeDelta: 0.0315,
+        longitudeDelta: 0.0258
+    });
+
+}
+
+
+
+
+  
 
   
 
   render() {
-    
-
     return (
       <View style={styles.container}>
-
         <View style={styles.carouselContainer}>
             <Carousel
               ref={(c) => { this._carousel = c; }}
@@ -162,21 +171,15 @@ export default class Maps extends Component {
               renderItem={this._renderItem}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
-              inactiveSlideScale={0.95}
+              inactiveSlideScale={0.75}
               inactiveSlideOpacity={1}
               enableMomentum={true}
               activeSlideAlignment={'start'}
               containerCustomStyle={styles.slider}
               contentContainerCustomStyle={styles.sliderContentContainer}
-              activeAnimationType={'spring'}
               onSnapToItem={(index, marker) => this._centerMapOnMarker(index, marker)}
-              activeAnimationOptions={{
-                  friction: 1,
-                  tension: 40
-              }}
             />
         </View>
-
         <MapView
           ref={map => this.map = map}
           initialRegion={this.state.region}
@@ -190,22 +193,15 @@ export default class Maps extends Component {
                 coordinate={marker.coordinate} 
                 title={marker.title}
                 image={marker.icon}
-                onPress={() => this.markerClick(index)}
-                >
-
+                onPress={() => this.markerClick(index)}>
               </Marker>
             );
           })}
-        </MapView>
-        
+        </MapView>  
       </View>
     );
   }
 }
-
-
-
-
 
 const colors = {
   black: '#1a1917',
@@ -218,31 +214,28 @@ const styles = StyleSheet.create({
   },
   slideInnerContainer: {
     width: itemWidth,
-    height: slideHeight,
+    height: 200,
     paddingHorizontal: itemHorizontalMargin,
     paddingBottom: 5, // needed for shadow
     backgroundColor: '#00000000'
   },
   textContainer: {
       justifyContent: 'center',
-      paddingTop: 20,
-      paddingBottom: 20,
-      paddingHorizontal: 16,
-      backgroundColor: 'white',
-      borderRadius: 8,
-      backgroundColor: '#5B51CA'
+      paddingVertical: 20,
+      paddingHorizontal: 40,
+      borderRadius: 8
   },
   title: {
       color: colors.black,
-      fontSize: 13,
+      fontSize: 20,
       fontWeight: 'bold',
       letterSpacing: 0.5
   },
-  subtitle: {
+  description: {
       marginTop: 6,
-      color: colors.gray,
-      fontSize: 12,
-      fontStyle: 'italic'
+      color: colors.black,
+      fontSize: 16,
+      fontWeight: '200'
   },
 
   container: {
@@ -255,7 +248,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -10,
     width: Dimensions.get('window').width,
-    height: 100
+    height: 180
   },
   mapContainer: {
     flex:1,
@@ -272,5 +265,18 @@ const styles = StyleSheet.create({
   sliderContentContainer: {
       paddingVertical: 10, // for custom animation
       backgroundColor: '#00000000'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  button: {
+      borderWidth: 1,
+      alignItems: 'center',
+      borderColor: '#fff',
+      paddingVertical: 5,
+      paddingHorizontal: 30,
+      borderRadius: 8,
+      marginTop: 10
   }
 });
