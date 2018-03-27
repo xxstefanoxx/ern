@@ -108,6 +108,10 @@ export default class Search extends Component {
   OnPress() {
     this.props.navigator.push({
       screen: 'ern.Maps', // unique ID registered with Navigation.registerScreen
+      title: 'Mappa',
+      previewActions: [{ // action presses can be detected with the `PreviewActionPress` event on the commited screen.
+        title: 'Search'
+      }],
     });
   }
 
