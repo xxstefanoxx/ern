@@ -18,6 +18,7 @@ import Credits from "./src/components/Credits";
 import Search from "./src/components/Search";
 import Favourite from "./src/components/Favourite";
 import Maps from "./src/components/Maps";
+import Detail from "./src/components/Detail";
 
 Navigation.registerComponent(
   "ern.Intro",
@@ -47,6 +48,11 @@ Navigation.registerComponent(
 Navigation.registerComponent(
   "ern.Maps",
   () => Maps
+)
+
+Navigation.registerComponent(
+  "ern.Detail",
+  () => Detail
 )
 
 // Start a App

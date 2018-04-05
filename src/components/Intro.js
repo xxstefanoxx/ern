@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
       fontSize: 25,
       fontWeight: 'bold',
       marginTop: Platform.OS === 'ios' ? 60 : 30,
-      color: '#000',
+      color: '#fff',
       textAlign: 'center'
     },
     nextButton: {
@@ -52,17 +52,17 @@ const styles = StyleSheet.create({
   {
     key: 'first',
     text: 'It’s simple! \n Search for the \n rare disease ',
-    image: require('../assets/tutorial1.png')
+    image: require('../assets/images/tutorial1.png')
   },
   {
     key: 'somethun-dos',
     text: 'See the \n structures nearby \n',
-    image: require('../assets/tutorial2.png')
+    image: require('../assets/images/tutorial2.png')
   },
   {
     key: 'somethun1',
     text: 'Get all the \n information you want \n',
-    image: require('../assets/tutorial3.png')
+    image: require('../assets/images/tutorial3.png')
   }
 ];
   

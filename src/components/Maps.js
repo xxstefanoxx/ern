@@ -42,6 +42,7 @@ export default class Maps extends Component {
     });
   }
 
+
   state = {
     selected: 0,
     markers: [
@@ -93,16 +94,28 @@ export default class Maps extends Component {
       longitudeDelta: 0.040142817690068,
     },
   };
+
+  goToDetail() {
+    this.props.navigator.showModal({
+        screen: "ern.Detail", // unique ID registered with Navigation.registerScreen
+        title: "Modal", // title of the screen as appears in the nav bar (optional)
+        passProps: {}, // simple serializable object that will pass as props to the modal (optional)
+        navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
+        animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+      });
+  }
   
+
   _renderItem ({item, index}) {
     return (
         <View style={styles.mainContainer}>
           <TouchableOpacity
               activeOpacity={1}
               style={styles.slideInnerContainer}
-              onPress={() => { alert(`You've clicked '${item.title}'`); }}
+              onPress={() => this.goToDetail() }
               >
                 <LinearGradient colors={['#3B79B0', '#466BB9', '#5558C5']} style={[styles.textContainer]}>
+                    <Icon style={styles.arrow} name="angle-up" size={30} color="#fff" />
                     <Text style={[styles.title]}>{ item.title }</Text>
                     <Text style={[styles.description]} numberOfLines={2}>
                         { item.description }
@@ -168,7 +181,7 @@ export default class Maps extends Component {
             <Carousel
               ref={(c) => { this._carousel = c; }}
               data={this.state.markers}
-              renderItem={this._renderItem}
+              renderItem={this._renderItem.bind(this)}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
               inactiveSlideScale={0.75}
@@ -203,6 +216,20 @@ export default class Maps extends Component {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const colors = {
   black: '#1a1917',
   gray: '#888888'
@@ -210,14 +237,14 @@ const colors = {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: '#00000000',
+      backgroundColor: '#00000000',
   },
   slideInnerContainer: {
-    width: itemWidth,
-    height: 200,
-    paddingHorizontal: itemHorizontalMargin,
-    paddingBottom: 5, // needed for shadow
-    backgroundColor: '#00000000'
+      width: itemWidth,
+      height: 200,
+      paddingHorizontal: itemHorizontalMargin,
+      paddingBottom: 5, // needed for shadow
+      backgroundColor: '#00000000'
   },
   textContainer: {
       justifyContent: 'center',
@@ -237,25 +264,29 @@ const styles = StyleSheet.create({
       fontSize: 16,
       fontWeight: '200'
   },
-
+  arrow: {
+      position: 'absolute',
+      top: 15,
+      right: 20
+  },
   container: {
-    flex: 1,
-    position: 'relative',
-    backgroundColor: '#00000000'
+      flex: 1,
+      position: 'relative',
+      backgroundColor: '#00000000'
   },
   carouselContainer: {
-    backgroundColor: '#00000000',
-    position: 'absolute',
-    bottom: -10,
-    width: Dimensions.get('window').width,
-    height: 180
+      backgroundColor: '#00000000',
+      position: 'absolute',
+      bottom: -10,
+      width: Dimensions.get('window').width,
+      height: 180
   },
   mapContainer: {
-    flex:1,
-    position: 'absolute',
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-    zIndex: -1
+      flex:1,
+      position: 'absolute',
+      width: Dimensions.get('window').width,
+      height: Dimensions.get('window').height,
+      zIndex: -1
   },
   slider: {
       marginTop: 15,
