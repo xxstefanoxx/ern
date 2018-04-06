@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableHighlight, Image } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, Image, TouchableOpacity, Dimensions, Linking, Platform } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
+import Communications from 'react-native-communications';
 
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
+
+function wp (percentage) {
+  const value = (percentage * viewportWidth) / 100;
+  return Math.round(value);
+}
+
+const btnWidth = wp(55);
 
 const SECTIONS = [
   {
@@ -47,10 +56,10 @@ export default class Detail extends Component {
       name = require('../assets/images/access-time.png')
     }
     return (
-      <LinearGradient colors={['#4FB5B0', '#52B6B1', '#52B7B1']} style={[styles.contentAccordion, styles.accordionHeader]}>
+      <LinearGradient colors={['#4FB5B0', '#52B6B1', '#52B7B1']} style={[styles.accordionHeader]}>
         <Image source={name} style={[styles.headerImage]} resizeMode="contain" />
         <Text style={[styles.headerTitle]}>{section.title}</Text>
-        <Icon name="angle-down" size={20} color="#fff" />
+        <Icon style={[styles.headerIco]} name="angle-down" size={20} color="#fff" />
       </LinearGradient>
     );
   }
@@ -63,8 +72,20 @@ export default class Detail extends Component {
     );
   }
 
-  _onPressButton() {
-    this.setState({ isCollapsed: false })
+  _redirectToMap(lat, long) {
+    var url = ""
+    if(Platform.OS === 'ios') {
+      url = "http://maps.apple.com/?ll=" + lat + "," + long
+    } else {
+      url = "geo:" + lat + "," + long
+    }
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        console.log('Can\'t handle url: ' + url);
+      } else {
+        return Linking.openURL(url);
+      }
+    }).catch(err => console.error('An error occurred', err));
   }
   
   render() {
@@ -81,12 +102,26 @@ export default class Detail extends Component {
           <Text style={[styles.social]}>Youtube</Text>
         </View>
         <View>
-        <Accordion
-          sections={SECTIONS}
-          renderHeader={this._renderHeader}
-          renderContent={this._renderContent}
-          underlayColor='transparent'
-        />
+          <Accordion
+            sections={SECTIONS}
+            renderHeader={this._renderHeader}
+            renderContent={this._renderContent}
+            underlayColor='transparent'
+          />
+        </View>
+        <View style={styles.containerButton}>
+          <TouchableOpacity style={styles.button} onPress={() => Communications.phonecall('3441176641', true)}>
+              <Icon name="phone" size={20} color="#fff" />
+              <Text style={styles.txtBtn}>Call Now</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => Communications.email(['emailAddress1', 'emailAddress2'],null,null,'My Subject','My body text')}>
+              <Icon name="envelope" size={20} color="#fff" />
+              <Text style={styles.txtBtn}>Send Email</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => this._redirectToMap(37.484847, -122.148386)}>
+              <Icon name="compass" size={20} color="#fff" />
+              <Text style={styles.txtBtn}>Directions</Text>
+          </TouchableOpacity>
         </View>
       </LinearGradient>
     );
@@ -103,17 +138,19 @@ const styles = StyleSheet.create({
   },
   contentAccordion: {
     paddingVertical: 15,
-    paddingHorizontal: 40 
+    paddingLeft: 85 
   },
   accordionHeader: {
+    paddingVertical: 15,
+    paddingHorizontal: 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    alignContent: 'flex-start'
+    alignItems: 'center'
   },
   headerTitle: {
-    alignItems: 'flex-start',
-    alignContent: 'flex-start'
+    flexGrow: 1,
+    textAlign: 'left',
+    marginLeft: 20
   },
   headerImage: {
     width: 25,
@@ -136,5 +173,30 @@ const styles = StyleSheet.create({
   address: {
     fontSize: 16,
     color: '#000'
+  },
+  containerButton: {
+    flex: 2,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 50
+  },
+  button: {
+    width: btnWidth,
+    borderWidth: 1,
+    alignItems: 'center',
+    borderColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  txtBtn: {
+    flexGrow: 1,
+    textAlign: 'left',
+    marginHorizontal: 20,
+    fontWeight: 'bold',
   }
 })
