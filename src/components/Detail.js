@@ -30,7 +30,7 @@ const SECTIONS = [
   {
     type: 3,
     title: 'Opening Hours - Closing soon',
-    content: 'Lorem ipsum...'
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum tellus eget sem varius fringilla. Donec id nulla in purus euismod rutrum. Maecenas egestas tortor id nibh laoreet, in mollis ipsum facilisis. Vestibulum mauris sem, faucibus eu consectetur ut, tristique non urna. Quisque porta bibendum metus, at fringilla augue venenatis vel. Praesent accumsan aliquet erat. Ut ornare lobortis nunc sed congue. Phasellus dui massa, lacinia id enim ut, vestibulum vulputate dolor. In vestibulum molestie augue, eu placerat nunc tempus eget. Maecenas eu consectetur lectus. Nulla condimentum elementum ultrices. Vestibulum et diam fringilla, fermentum turpis quis, aliquam turpis. Vivamus vitae euismod augue, cursus scelerisque velit.'
   }
 ];
 
@@ -38,12 +38,23 @@ const SECTIONS = [
 export default class Detail extends Component {
 
   state = {
-    isCollapsed: true
+    isFavorite: true,
+    isCollapsed: true,
+    favoriteImage: require('../assets/images/Favourite_OFF.png')
   }
 
   constructor(props) {
     super(props);
-    
+    this.props.navigator.setStyle({
+      navBarHidden: true,
+      statusBarHidden: Platform.OS === 'ios' ? true : false,
+    });
+  }
+
+  componentWillMount() {
+    if(this.state.isFavorite) {
+      this.setState({ favoriteImage: require('../assets/images/Favourite_ON.png') })
+    }
   }
 
   _renderHeader(section) {
@@ -87,13 +98,47 @@ export default class Detail extends Component {
       }
     }).catch(err => console.error('An error occurred', err));
   }
+
+  _closeLayer() {
+    this.props.navigator.dismissModal({
+      animationType: 'slide-down' // 'none' / 'slide-down' , dismiss animation for the modal (optional, default 'slide-down')
+    });
+  }
+
+  _favorite() {
+    if(this.state.isFavorite) {
+      this._removeFromFavorite()
+    } else {
+      this._addToFavorite()
+    }
+  }
+
+  _addToFavorite() {
+    this.setState({ isFavorite: true })
+    this.setState({ favoriteImage: require('../assets/images/Favourite_ON.png') })
+  }
+
+  _removeFromFavorite() {
+    this.setState({ isFavorite: false })
+    this.setState({ favoriteImage: require('../assets/images/Favourite_OFF.png') })
+  }
   
   render() {
     return (
       <LinearGradient colors={['#35A6A9', '#5CBCB3', '#8ED7C0']} style={[styles.mainContainer]}>
+        <View style={[styles.contentExit]}>
+          <TouchableOpacity onPress={() => this._closeLayer()}>
+            <Image source={require('../assets/images/Close_card.png')} style={[styles.exitImage]} resizeMode="contain" />
+          </TouchableOpacity>
+        </View>
         <View style={[styles.content]}>
-          <Text style={[styles.mainTitle]}>Patient Association Name</Text>
-          <Text style={[styles.address]}>Address, zip code - city</Text>
+          <TouchableOpacity onPress={() => this._favorite()}>
+            <Image source={this.state.favoriteImage} style={[styles.favoriteImage]} resizeMode="contain" />
+          </TouchableOpacity>
+          <View>
+            <Text style={[styles.mainTitle]}>Patient Association Name</Text>
+            <Text style={[styles.address]}>Address, zip code - city</Text>
+          </View>
         </View>
         <View style={[styles.contentSocial]}>
           <Text style={[styles.social]}>Sito Web</Text>
@@ -101,28 +146,29 @@ export default class Detail extends Component {
           <Text style={[styles.social]}>Twitter</Text>
           <Text style={[styles.social]}>Youtube</Text>
         </View>
-        <View>
+        <View style={styles.containerAccordion}>
           <Accordion
             sections={SECTIONS}
             renderHeader={this._renderHeader}
             renderContent={this._renderContent}
             underlayColor='transparent'
           />
+          <View style={styles.containerButton}>
+            <TouchableOpacity style={styles.button} onPress={() => Communications.phonecall('3441176641', true)}>
+                <Icon name="phone" size={20} color="#fff" />
+                <Text style={styles.txtBtn}>Call Now</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => Communications.email(['emailAddress1', 'emailAddress2'],null,null,'My Subject','My body text')}>
+                <Icon name="envelope" size={20} color="#fff" />
+                <Text style={styles.txtBtn}>Send Email</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => this._redirectToMap(37.484847, -122.148386)}>
+                <Icon name="compass" size={20} color="#fff" />
+                <Text style={styles.txtBtn}>Directions</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.containerButton}>
-          <TouchableOpacity style={styles.button} onPress={() => Communications.phonecall('3441176641', true)}>
-              <Icon name="phone" size={20} color="#fff" />
-              <Text style={styles.txtBtn}>Call Now</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => Communications.email(['emailAddress1', 'emailAddress2'],null,null,'My Subject','My body text')}>
-              <Icon name="envelope" size={20} color="#fff" />
-              <Text style={styles.txtBtn}>Send Email</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => this._redirectToMap(37.484847, -122.148386)}>
-              <Icon name="compass" size={20} color="#fff" />
-              <Text style={styles.txtBtn}>Directions</Text>
-          </TouchableOpacity>
-        </View>
+        
       </LinearGradient>
     );
   }
@@ -132,8 +178,24 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1
   },
+  contentExit: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 30,
+    marginTop: 40,
+    marginBottom: 20
+  },
+  exitImage: {
+    width: 25,
+    height: 25
+  },
+  favoriteImage: {
+    width: 20,
+    height: 20,
+    marginRight: 10
+  },
   content: {
-    paddingTop: 30,
+    flexDirection: 'row',
     paddingHorizontal: 60 
   },
   contentAccordion: {
@@ -174,12 +236,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000'
   },
+  containerAccordion: {
+    flex: 2
+  },
   containerButton: {
-    flex: 2,
     flexDirection: 'column',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 50
+    marginTop: 50
   },
   button: {
     width: btnWidth,
