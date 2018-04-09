@@ -16,9 +16,11 @@ import Intro from "./src/components/Intro";
 import Menu from "./src/components/Menu";
 import Credits from "./src/components/Credits";
 import Search from "./src/components/Search";
-import Favourite from "./src/components/Favourite";
 import Maps from "./src/components/Maps";
 import Detail from "./src/components/Detail";
+import Favourites from "./src/components/Favourites";
+
+
 
 Navigation.registerComponent(
   "ern.Intro",
@@ -36,8 +38,8 @@ Navigation.registerComponent(
 )
 
 Navigation.registerComponent(
-  "ern.Favourite",
-  () => Favourite
+  "ern.Favourites",
+  () => Favourites
 )
 
 Navigation.registerComponent(
@@ -54,6 +56,7 @@ Navigation.registerComponent(
   "ern.Detail",
   () => Detail
 )
+
 
 // Start a App
 Navigation.startSingleScreenApp({

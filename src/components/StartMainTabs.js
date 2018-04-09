@@ -17,9 +17,9 @@ const startTabs = () => {
                     icon: sources[0]
                 },
                 {
-                    screen: "ern.Favourite",
-                    label: "Favourite",
-                    title: "Favourite",
+                    screen: "ern.Favourites",
+                    label: "Favourites",
+                    title: "Favourites",
                     icon: sources[1]
                 },
                 {

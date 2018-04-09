@@ -25,8 +25,11 @@ function wp (percentage) {
     return Math.round(value);
 }
 
-const slideWidth = wp(75);
-const itemHorizontalMargin = wp(2);
+const slideWidth = wp(90);
+const itemHorizontalMargin = wp(1);
+
+const OnImage = require('../assets/images/GEO_Division_active.png')
+const OffImage = require('../assets/images/GEO_Division_OFF.png')
 
 export const sliderWidth = viewportWidth;
 export const itemWidth = slideWidth + itemHorizontalMargin * 2;
@@ -54,7 +57,7 @@ export default class Maps extends Component {
         title: "Best Place",
         description: "This is the best place in Portland",
         image: "https://i.imgur.com/sNam9iJ.jpg",
-        icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"
+        icon: OffImage
       },
       {
         coordinate: {
@@ -64,7 +67,7 @@ export default class Maps extends Component {
         title: "Second Best Place",
         description: "This is the second best place in Portland",
         image: "https://i.imgur.com/N7rlQYt.jpg",
-        icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"
+        icon: OffImage
       },
       {
         coordinate: {
@@ -74,7 +77,7 @@ export default class Maps extends Component {
         title: "Third Best Place",
         description: "This is the third best place in Portland",
         image: "https://i.imgur.com/UDrH0wm.jpg",
-        icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"
+        icon: OffImage
       },
       {
         coordinate: {
@@ -84,7 +87,7 @@ export default class Maps extends Component {
         title: "Fourth Best Place",
         description: "This is the fourth best place in Portland",
         image: "https://i.imgur.com/Ka8kNST.jpg",
-        icon: "https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png"
+        icon: OffImage
       },
     ],
     region: {
@@ -148,11 +151,11 @@ export default class Maps extends Component {
     const markerData = this.state.markers[markerIndex];
     const markers = this.state.markers;
 
-    markers[this.state.selected].icon = 'https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_OFF.png'
+    markers[this.state.selected].icon = OffImage;
 
     this.setState({ selected: markerIndex })
     
-    markers[markerIndex].icon = 'https://raw.githubusercontent.com/xxstefanoxx/ern/master/src/assets/GEO_Division_active.png';
+    markers[markerIndex].icon = OnImage;
     this.setState({ markers });
 
     if (!markerData || !mapRef) {
@@ -184,7 +187,7 @@ export default class Maps extends Component {
               renderItem={this._renderItem.bind(this)}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
-              inactiveSlideScale={0.75}
+              inactiveSlideScale={0.95}
               inactiveSlideOpacity={1}
               enableMomentum={true}
               activeSlideAlignment={'start'}
@@ -241,16 +244,17 @@ const styles = StyleSheet.create({
   },
   slideInnerContainer: {
       width: itemWidth,
-      height: 200,
       paddingHorizontal: itemHorizontalMargin,
       paddingBottom: 5, // needed for shadow
       backgroundColor: '#00000000'
   },
   textContainer: {
-      justifyContent: 'center',
-      paddingVertical: 20,
-      paddingHorizontal: 40,
-      borderRadius: 8
+    justifyContent: 'center',
+    paddingTop: 20 - 8,
+    paddingBottom: 20,
+    paddingHorizontal: 16,
+    backgroundColor: 'transparent',
+    borderRadius: 8
   },
   title: {
       color: colors.black,
@@ -279,7 +283,6 @@ const styles = StyleSheet.create({
       position: 'absolute',
       bottom: -10,
       width: Dimensions.get('window').width,
-      height: 180
   },
   mapContainer: {
       flex:1,
